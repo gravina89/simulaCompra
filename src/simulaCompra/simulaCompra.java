@@ -22,14 +22,15 @@ public class simulaCompra {
  
     @Test
     public void realizaCompra() {
-    	realizaLogin();
     	acessaCategoria();
     	incluirProduto();
     	concluiCompra();
     }
     
     private void concluiCompra() {
-    	aguardaVisibilidadeClicar("//a[@title='Proceed to checkout']");
+    	aguardaVisibilidadeClicar("//p[@class='cart_navigation clearfix']/a");
+    	realizaLogin();
+    	driver.findElement(By.name("processAddress")).submit();
 	}
 
 	private void incluirProduto() {
@@ -40,7 +41,7 @@ public class simulaCompra {
 
 	private void aguardaVisibilidadeClicar(String xpathClick) {
 		WebElement element = driver.findElement(By.xpath(xpathClick));
-    	WebDriverWait wait = new WebDriverWait(driver, 20);
+    	WebDriverWait wait = new WebDriverWait(driver, 30);
     	wait.until(ExpectedConditions.visibilityOf(element));
     	element.click();
 	}
@@ -50,18 +51,16 @@ public class simulaCompra {
     }
     
     private void realizaLogin() {    		
-    	driver.findElement(By.xpath("//a[@class='login']")).click();
     	WebElement email = driver.findElement(By.id("email"));
     	email.sendKeys("rafaelgravina@hotmail.com");
     	WebElement senha = driver.findElement(By.id("passwd"));
     	senha.sendKeys("123456789");
     	driver.findElement(By.id("SubmitLogin")).click();
-    	driver.findElement(By.xpath("//div[@id='center_column']/ul/li")).click();
     }
     
     
     @AfterClass
     public static void tearDownTest(){
-        driver.quit();
+//        driver.quit();
     }
 }
