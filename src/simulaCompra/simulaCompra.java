@@ -1,7 +1,5 @@
 package simulaCompra;
 
-import java.util.concurrent.TimeUnit;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,14 +15,14 @@ public class simulaCompra {
     private static String url = "http://automationpractice.com/";
     @BeforeClass
     public static void setUpTest(){
-    	System.setProperty("webdriver.gecko.driver", "/home/gravina/eclipse-workspace/geckodriver");
+    	System.setProperty("webdriver.gecko.driver", "../geckodriver");
 		driver = new FirefoxDriver();
 		driver.navigate().to(url);
     }
  
     @Test
     public void realizaCompra() {
-//    	realizaLogin();
+    	realizaLogin();
     	acessaCategoria();
     	incluirProduto();
     	concluiCompra();
@@ -64,6 +62,6 @@ public class simulaCompra {
     
     @AfterClass
     public static void tearDownTest(){
-//        driver.quit();
+        driver.quit();
     }
 }
