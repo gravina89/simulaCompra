@@ -1,37 +1,69 @@
 package simulaCompra;
 
+import java.util.concurrent.TimeUnit;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
  
 public class simulaCompra {
-	// Declarando um objeto do tipo WebDriver, utilizado pelo Selenium WebDriver.
     private static WebDriver driver;
- 
-    // Método que inicia tudo que for necessário para o teste
-    // Cria uma instância do navegador e abre a página inicial da DevMedia.
+    private static String url = "http://automationpractice.com/";
     @BeforeClass
     public static void setUpTest(){
     	System.setProperty("webdriver.gecko.driver", "/home/gravina/eclipse-workspace/geckodriver");
 		driver = new FirefoxDriver();
-		driver.navigate().to("http://automationpractice.com/");
+		driver.navigate().to(url);
     }
  
-    // Método que Acessa a categoria.
     @Test
-    public void acessaCategoria() {
-    	driver.findElement(By.xpath("//div[@id='block_top_menu']/ul/li[2]")).click();
-//		String a = driver.findElement(By.cssSelector("div.product-container.div.span")).getText();
-		String a = driver.findElement(By.cssSelector("itemprop='price'")).getText();
-		System.out.println(a);
+    public void realizaCompra() {
+//    	realizaLogin();
+    	acessaCategoria();
+    	incluirProduto();
+    	concluiCompra();
     }
     
-    // Método que finaliza o teste, fechando a instância do WebDriver.    
+    private void concluiCompra() {
+    	aguardaVisibilidadeClicar("//a[@title='Proceed to checkout']");
+	}
+
+	private void incluirProduto() {
+    	driver.findElement(By.xpath("//div[@class='product-container']")).click();
+    	driver.findElement(By.xpath("//button[@class='exclusive']")).click();
+    	aguardaVisibilidadeClicar("//div[@class='button-container']/a[@title='Proceed to checkout']");
+    }
+
+	private void aguardaVisibilidadeClicar(String xpathClick) {
+		WebElement element = driver.findElement(By.xpath(xpathClick));
+    	WebDriverWait wait = new WebDriverWait(driver, 20);
+    	wait.until(ExpectedConditions.visibilityOf(element));
+    	element.click();
+	}
+
+	private void acessaCategoria() {
+    	driver.findElement(By.xpath("//div[@id='block_top_menu']/ul/li[2]")).click();
+    }
+    
+    private void realizaLogin() {    		
+    	driver.findElement(By.xpath("//a[@class='login']")).click();
+    	WebElement email = driver.findElement(By.id("email"));
+    	email.sendKeys("rafaelgravina@hotmail.com");
+    	WebElement senha = driver.findElement(By.id("passwd"));
+    	senha.sendKeys("123456789");
+    	driver.findElement(By.id("SubmitLogin")).click();
+    	driver.findElement(By.xpath("//div[@id='center_column']/ul/li")).click();
+    }
+    
+    
     @AfterClass
     public static void tearDownTest(){
-        driver.quit();
+//        driver.quit();
     }
 }
